@@ -1,0 +1,221 @@
+class Node(object):
+	def __init__(self, data=None, next_node=None):
+		self.data=data
+		self.next_node=next_node
+
+	def get_data(self):
+		return self.data
+
+	def set_data(self, val):
+		self.data=val
+
+	def get_next(self):
+		return self.next_node
+
+	def set_next(self, new_next):
+		self.next_node=new_next
+
+	def print_node(self):
+		print self.data
+
+class LinkedList(object):
+	def __init__(self, head=None):
+		self.head=head
+
+	def insert(self, data):
+		new_node=Node(data=data)
+		new_node.set_next(self.head)
+		self.head=new_node
+
+	def size(self):
+		current = self.head
+		count =0
+		while current: #while current node is not NULL 
+			count += 1
+			current = current.get_next()
+		return count
+
+	def search(self, val):
+		current = self.head
+		found = False
+		while current and found is False:
+			if current.get_data() == val:
+				found = True
+			else: 
+				current = current.get_next()
+		if current is None: 
+			print "Value not in list"
+		return current
+
+	def delete(self, val):
+		current = self.head
+		prev = None
+		# found = False
+		while current: # and found is False: 
+			if current.get_data() == val:
+				# found = True
+				# prev.set_next(current.get_next())
+				if prev is None: 
+					self.head = current.get_next()
+					current=current.get_next()
+				else: 
+					prev.set_next(current.get_next())
+					current = current.get_next()
+			else: 
+				prev = current
+				current = current.get_next()
+		if current is None: 
+			print "Value not in list"
+
+
+	# def delete_dups(self):
+	# 	current = self.head
+	# 	prev = None 
+	# 	# found = False
+	# 	unique_vals = []
+	# 	while current:
+	# 		if current.get_data() not in unique_vals:
+	# 			unique_vals.append(current.get_data())
+	# 			prev = current
+	# 			current = current.get_next()
+	# 		else:
+	# 			prev.set_next(current.get_next())
+	# 			current = current.get_next()
+
+	def print_list(self):
+		current = self.head
+		while current:
+			current.print_node()
+			current = current.get_next()
+	
+	# without additional space O(N^2) time 
+	def delete_dups(self):
+		current = self.head
+		while current: 
+			run_prev = current
+			runner = current.get_next()
+			while runner: 
+				if runner.get_data() != current.get_data():
+					run_prev = runner
+					runner = runner.get_next()
+				else:
+					run_prev.set_next(runner.get_next())
+					runner = runner.get_next()
+			current = current.get_next()
+
+	def find_k_last(self, k):
+		if k > self.size():
+			return "Invalid K"
+		else: 
+			current = self.head
+			node_num = 0
+			while node_num < self.size()-k:
+				current = current.get_next()
+				node_num+=1
+			return current.get_data()
+
+
+
+
+# head1 = Node(1)
+# # head1.get_data()
+# list1 = LinkedList(head1)
+# list1.insert(2)
+# list1.insert(3)
+# list1.insert(4)
+# list1.insert(5)
+# list1.insert(6)
+# list1.insert(7)
+# list1.insert(8)
+
+# list1.print_list()
+# print "Deleting duplicates"
+# list1.delete_dups()
+# list1.print_list()
+
+# print list1.find_k_last(4)
+
+def del_mid_node(mid_node):
+	current = mid_node
+	while current.get_next().get_next():
+		# print current.get_data()
+		current.set_data(current.get_next().get_data())
+		current = current.get_next()
+	current.set_data(current.get_next().get_data())
+	current.set_next(None)
+
+# print "Deleting first node" 
+# del_mid_node(list1.head.get_next().get_next())
+# list1.print_list()
+
+def partition(llist, partition):
+	prev = None
+	current = llist.head
+	while current:
+		if current.get_data() < partition and prev is not None:
+			# move current value to head 
+			# if prev is not None:
+			prev.set_next(current.get_next())
+			current.set_next(llist.head)
+			llist.head = current
+			current = prev.get_next()
+			# else: 
+			# 	prev = current
+			# 	current = current.get_next()
+
+		else:
+			# move to next node
+			prev = current
+			current = current.get_next()
+
+# list2 = LinkedList(Node(4))
+# list2.insert(6)
+# list2.insert(2)
+# list2.insert(8)
+# list2.insert(12)
+# list2.insert(5)
+# list2.insert(9)
+# list2.print_list()
+
+# print "Partitioning List"
+# partition(list2, 12)
+# list2.print_list()
+
+
+def sum_two_lists(list1, list2):
+	int1 = 0
+	int2 = 0
+	current = list1.head
+	for i in xrange(list1.size()):
+		int1 += (10 ** i) * current.get_data()
+		current = current.get_next()
+
+	current = list2.head
+	for i in xrange(list2.size()):
+		int2 += (10 ** i) * current.get_data()
+		current = current.get_next()
+	s=int1+int2
+
+	sum_list = LinkedList(Node(s % 10))
+	s /= 10 
+	while s != 0: 
+		sum_list.insert(s % 10)
+		s /= 10
+
+	return sum_list
+
+
+list3 = LinkedList(Node(6))
+list3.insert(1)
+list3.insert(7)
+list3.print_list()
+
+list4 = LinkedList(Node(2))
+list4.insert(9)
+list4.insert(5)
+list4.print_list()
+
+sum_two_lists(list3, list4).print_list()
+
+# print 10 / 4
+
